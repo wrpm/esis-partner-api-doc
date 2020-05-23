@@ -2,28 +2,6 @@
 
 > _**NOTE**: This document is working version of the eSIS Partner API documentation. It will be changed, updated and improved in the coming days based on the more information, suggestions and limitations we gather from both our developers and our partners._
 
-<!-- Intro
-Document conventions
-Authentication
-Request format
-Response format
-200 range
-400 range
-500 range
-Pagination
-Products
-List Products
-Filters
-Show Product
-Create Product
-Create Or Update Product
-Example Response
-Create Or Update Many Products
-Update
-Delete
-Delete Many Products
-Sync All Products -->
-
 ## Intro
 
 The eSIS Partner API:
@@ -128,7 +106,9 @@ Example product:
   "special_to_date": null,
   "is_in_stock": true,
   "stock_qty": null,
-  "extra": null
+  "extra": {
+    "loyalty_poitns": 34
+  }
 }
 ```
 
@@ -181,11 +161,12 @@ Object
 No
 A container object for extra data on a product specific to a partner. -->
 
-### List Products
+### List
 ```
 GET /api/v1/products
 ```
-List partner’s products.
+
+List all products.
 
 #### Parameters
 
@@ -201,6 +182,7 @@ List partner’s products.
 ##### Filters
 > @TODO Document available filters for the list endpoint.
 
+#### Example response
 ```
 Status: 200 OK
 
@@ -227,22 +209,59 @@ Status: 200 OK
 }
 ```
 
-### Show Product
+### Show
 ```
 GET /api/v1/products/{external_id}
 ```
-Get a single partner’s product by `external_id`.
+
+Get a single product by `external_id`.
 
 #### Parameters
 
 - **external_id** - Partner’s product ID
   - Required
 
+#### Example responses
+```
+Status: 200 OK
+
+{
+    "status": "success",
+    "data": {
+      "external_id": "10001",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": null,
+      "price": 36990.00,
+      "special_price": 34990.00,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {
+        "loyalty_poitns": 34
+      }
+    },
+    "message": "Request Successful"
+}
+```
+
+```
+Status: 404 Not Found
+
+{
+    "status": "failed",
+    "data": {},
+    "message": "Product not found"
+}
+```
+
 ### Create Product
 ```
 POST /api/v1/products
 ```
-Creates new partner’s product.
+
+Creates a new product.
 
 #### Example request
 ```
@@ -265,6 +284,20 @@ Accept: application/json
   "extra": {
     "loyalty_poitns": 34
   }
+}
+```
+
+#### Example responses
+
+```
+```
+```
+Status: 400 Bad Request
+
+{
+    "status": "failed",
+    "data": {},
+    "message": "Duplicate key error - {\"external_id\":1}"
 }
 ```
 
@@ -423,20 +456,74 @@ PATCH /api/v1/products/{external_id}
 
 The PATCH method is used for partial changes to existing products.
 
-### Delete
-```
-DELETE /api/v1/products/{external_id}
-```
+> @TODO Document api endpoint
+- [x] Description
+- [x] Parameters
+- [ ] Request
+- [ ] Response
 
 #### Parameters
 
 - **external_id** - Partner’s product ID
   - Required
 
+
+### Delete
+```
+DELETE /api/v1/products/{external_id}
+```
+Delete an existing product by `external_id`.
+
+> @TODO Document api endpoint
+- [x] Description
+- [x] Parameters
+- [ ] Request
+- [ ] Response
+
+#### Parameters
+
+- **external_id** - Partner’s product ID
+  - Required
+
+#### Example responses
+```
+Status: 200 OK
+
+{
+    "status": "success",
+    "data": {
+        "_id": "5ec91e8bec3f2b53cf0a198f",
+        "external_id": "10123",
+        "sku": "SM-A712FZKUSEE",
+        "ean": "8806030255328",
+        "mpn": "",
+        "price": 1234.55,
+        "special_price": null,
+        "special_from_date": null,
+        "special_to_date": null,
+        "is_in_stock": true,
+        "stock_qty": null,
+        "extra": {
+            "loyalty_points": 15
+        },
+        "createdAt": "2020-05-23T13:00:59.438Z",
+        "updatedAt": "2020-05-23T13:00:59.438Z",
+        "__v": 0
+    },
+    "message": "Request Successful"
+}
+```
+
 ### Delete Many Products
 ```
 DELETE /api/v1/products/delete_many
 ```
+
+> @TODO Document api endpoint
+- [ ] Description
+- [ ] Parameters
+- [ ] Request
+- [ ] Response
 
 ### Sync All Products
 ```
@@ -449,7 +536,7 @@ Accepts an array of up to *1000* product objects. For each product, the product 
 
 This endpoint is proposed for use cases where it’s easier for a partner to send complete list of currently available products.
 
-### Example request
+#### Example request body
 ```json
 {
   "products": [
@@ -457,7 +544,7 @@ This endpoint is proposed for use cases where it’s easier for a partner to sen
       "external_id": "10001",
       "sku": "SM-A415FZBDEUF",
       "ean": "8806090419157",
-      "mpn": null,
+      "mpn": "",
       "price": 36990.00,
       "special_price": null,
       "special_from_date": null,
@@ -477,14 +564,41 @@ This endpoint is proposed for use cases where it’s easier for a partner to sen
 }
 ```
 
-### Example response
+#### Example response
 ```
 Status: 200 OK
 
 {
-  "affected": 150,
-  "created": 75,
-  "updated": 50,
-  "deleted": 25
+  "status": "success",
+  "data": [
+    {
+      "_id": "5ec91a88ec3f2a53cf0a198d",
+      "external_id": "10001",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": "",
+      "price": 36990,
+      "special_price": 34990,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {
+        "loyalty_poitns": 34
+      },
+      "__v": 0,
+      "createdAt": "2020-05-23T12:43:52.709Z",
+      "updatedAt": "2020-05-23T12:43:52.709Z"
+    },
+    {
+      "_id": "5ec91a88ec3f2a53cf0a198e",
+      "external_id": "10002",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      ...
+    },
+    ...
+  ],
+  "message": "Request Successful"
 }
 ```
