@@ -187,25 +187,26 @@ List all products.
 Status: 200 OK
 
 {
-    "status": "success",
-    "data": [
-      {
-        "external_id": "10001",
-        "sku": "SM-A415FZBDEUF",
-        "ean": "8806090419157",
-        "mpn": null,
-        "price": 36990.00,
-        "special_price": 34990.00,
-        "special_from_date": null,
-        "special_to_date": null,
-        "is_in_stock": true,
-        "stock_qty": 15,
-        "extra": {
-          "loyalty_poitns": 34
-        }
+  "status": "success",
+  "data": [
+    {
+      "external_id": "10001",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": null,
+      "price": 36990.00,
+      "special_price": 34990.00,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {
+        "loyalty_poitns": 34
       }
-    ],
-    "message": "Request Successful"
+    },
+    ...
+  ],
+  "message": "Request Successful"
 }
 ```
 
@@ -261,7 +262,7 @@ Status: 404 Not Found
 POST /api/v1/products
 ```
 
-Creates a new product.
+Create a new product.
 
 #### Example request
 ```
@@ -290,14 +291,58 @@ Accept: application/json
 #### Example responses
 
 ```
+Status: 201 Created
+
+{
+  "status": "success",
+  "data": {
+    "_id": "5ec92239ec3f2a53cf0a1991",
+    "external_id": "10001",
+    "sku": "SM-A415FZBDEUF",
+    "ean": "8806090419157",
+    "mpn": "",
+    "price": 36990.00,
+    "special_price": 34990.00,
+    "special_from_date": null,
+    "special_to_date": null,
+    "is_in_stock": true,
+    "stock_qty": null,
+    "extra": {
+      "loyalty_points": 34
+    },
+    "createdAt": "2020-05-23T13:16:41.797Z",
+    "updatedAt": "2020-05-23T13:16:41.797Z",
+    "__v": 0
+  },
+  "message": "Request Successful"
+}
 ```
+
 ```
 Status: 400 Bad Request
 
 {
     "status": "failed",
     "data": {},
-    "message": "Duplicate key error - {\"external_id\":1}"
+    "message": "Invalid request"
+}
+```
+```
+Status: 422 Unprocessable Entity
+
+{
+  "status": "failed",
+  "data": {
+    "details": [
+      {
+        "message": "\"price\" must be a number",
+        "path": [
+          "price"
+        ]
+      }
+    ]
+  },
+  "message": "\"price\" must be a number"
 }
 ```
 
@@ -308,11 +353,6 @@ POST /api/v1/products/create_or_update
 Creates new partner’s product if the product does not already exist, or updates an existing product identified by `external_id`.
 
 #### Example Request
-```
-Authorization: Bearer {token}
-Content-Type: application/json
-Accept: application/json
-```
 ```json
 {
   "external_id": "10001",
@@ -428,14 +468,6 @@ Each individual product object can identify an existing product by ~~sku, ean or
 
 #### Example response:
 ```
-Status: 200 OK
-
-{
-  "affected": 140,
-  "created": 100,
-  "updated": 40,
-  "failed": 10
-}
 ```
 
 ### Update
@@ -518,12 +550,29 @@ Status: 200 OK
 ```
 DELETE /api/v1/products/delete_many
 ```
+Delete many products.
 
-> @TODO Document api endpoint
-- [ ] Description
-- [ ] Parameters
-- [ ] Request
-- [ ] Response
+#### Example request body
+```json
+{
+  "products": [
+    { "external_id": 10001 },
+    { "external_id": 10002 },
+    { "external_id": 99999 }
+  ]
+}
+```
+
+#### Example responses
+```json
+{
+  "status": "success",
+  "data": {
+    "deleted": 2
+  },
+  "message": "Request Successful"
+}
+```
 
 ### Sync All Products
 ```
