@@ -61,7 +61,7 @@ Client must be a verified partner to make API requests. Partner can authorize ag
 - [x] Error messages related to invalid authentication
 - [ ] Sensitivity around authentication information
 
-To retrieve or store data with ESIS API partner’s app first need to authenticate with JWT bearer token. Each request must be authenticated. Clients can include JWT in HTTP header `Authorization: Bearer {token}`. 
+To retrieve or store data with ESIS API partner’s app first need to authenticate with JWT bearer token. Each request must be authenticated. Clients can include JWT in HTTP header `Authorization: Bearer {token}`.
 
 If a client fails to include a valid access token, it will receive a 401 response with an error message `Unauthorized`.
 
@@ -201,6 +201,32 @@ List partner’s products.
 ##### Filters
 > @TODO Document available filters for the list endpoint.
 
+```
+Status: 200 OK
+
+{
+    "status": "success",
+    "data": [
+      {
+        "external_id": "10001",
+        "sku": "SM-A415FZBDEUF",
+        "ean": "8806090419157",
+        "mpn": null,
+        "price": 36990.00,
+        "special_price": 34990.00,
+        "special_from_date": null,
+        "special_to_date": null,
+        "is_in_stock": true,
+        "stock_qty": 15,
+        "extra": {
+          "loyalty_poitns": 34
+        }
+      }
+    ],
+    "message": "Request Successful"
+}
+```
+
 ### Show Product
 ```
 GET /api/v1/products/{external_id}
@@ -281,10 +307,23 @@ Status: 201 Created
 Location: /api/v1/products/{new-product-sku}
 
 {
-  "external_id": "10001",
-  "sku": "SM-A415FZBDEUF",
-  "ean": "8806090419157",
-  ...
+    "status": "success",
+    "data": {
+      "external_id": "10001",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": null,
+      "price": 36990.00,
+      "special_price": 34990.00,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {
+        "loyalty_poitns": 34
+      }
+    },
+    "message": "Request Successful"
 }
 ```
 
@@ -295,10 +334,23 @@ Status: 200 OK
 Location: /api/v1/products/{existing-product-sku}
 
 {
-  "external_id": "10001",
-  "sku": "SM-A415FZBDEUF",
-  "ean": "8806090419157",
-  ...
+    "status": "success",
+    "data": {
+      "external_id": "10001",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": null,
+      "price": 36990.00,
+      "special_price": 34990.00,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {
+        "loyalty_poitns": 34
+      }
+    },
+    "message": "Request Successful"
 }
 ```
 
@@ -312,8 +364,33 @@ Accepts an array of up to *1000* product objects. For each product, the product 
 Each individual product object can identify an existing product by ~~sku, ean or by~~ external_id.
 
 #### Example Request
-```
-
+```json
+{
+  "products": [
+    {
+      "external_id": "10001",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": null,
+      "price": 36990.00,
+      "special_price": 34990.00,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {
+        "loyalty_poitns": 34
+      }
+    },
+    {
+      "external_id": "10001",
+      "sku": "SM-A415ZFBDEUF",
+      "ean": "8806090419158",
+      ...
+    },
+    ...
+  ]
+}
 ```
 
 #### Example response:
