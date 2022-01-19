@@ -55,7 +55,7 @@ Example product option of payment in installments (12 or 24 months):
       "period": 12
     },
     {
-      "amount": 6165.00,
+      "amount": 1541.25,
       "period": 24
     }
   ],

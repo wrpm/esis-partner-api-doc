@@ -132,7 +132,7 @@ Example product - installment payment:
       "period": 12
     },
     {
-      "amount": 6165.00,
+      "amount": 1541.25,
       "period": 24
     }
   ],
