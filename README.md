@@ -112,54 +112,34 @@ Example product:
 }
 ```
 
-<!-- Field
-Type
-Requirements
-Description
-sku
-String
-One of (sku, ean, mpn) fields is required.
-Samsung’s product SKU (global)
-ean
-String
-One of (sku, ean, mpn) fields is required.
-Samsung’s product EAN
-mpn
-String
-One of (sku, ean, mpn) fields is required.
-Samsung’s product MPN
-external_id
-String
-Required
-Partner’s product ID
-price
-Number
-Required
-Partner’s listed price for the product.
-special_price
-Number
-No
-Partner’s discounted price for the product.
-special_from_date
-Date
-No
-Start of the period where discounted price is applied.
-special_to_date
-Date (ISO ???)
-No
-End of the period where discounted price is applied.
-is_in_stock
-Bool
-One of (is_in_stock, stock_qty) fields is required.
-Flag for having the product in partner’s stock.
-stock_qty
-Number
-One of (is_in_stock, stock_qty) fields is required.
-Number of products that the partner has in stock.
-extra
-Object
-No
-A container object for extra data on a product specific to a partner. -->
+
+Example product - installment payment:
+```json
+{
+  "external_id": "10001",
+  "sku": "SM-A415FZBDEUF",
+  "ean": "8806090419157",
+  "mpn": null,
+  "price": 36990.00,
+  "special_price": null,
+  "special_from_date": null,
+  "special_to_date": null,
+  "is_in_stock": true,
+  "stock_qty": null,
+  "installments": [
+    {
+      "amount": 3082.50,
+      "period": 12
+    },
+    {
+      "amount": 6165.00,
+      "period": 24
+    }
+  ],
+  "extra": null
+}
+```
+
 
 ### List
 ```
