@@ -130,7 +130,7 @@ We recommend treating any 500 status codes as a warning or temporary state. Howe
       "currency": "EUR"
     }
   ],
-  "instalments": [
+  "installments": [
     {
       "amount": 1083.25,
       "period": 12
@@ -162,7 +162,7 @@ We recommend treating any 500 status codes as a warning or temporary state. Howe
 | `is_in_stock` | Boolean | Required |
 | `stock_qty` | Number |  |
 | `alt_prices` | Array |  |
-| `instalments` | Array |  |
+| `installments` | Array |  |
 | `extra` | Object |  |
 
 \* you MUST provide either `sku` or `ean`. if available, it is recommended to send both.
