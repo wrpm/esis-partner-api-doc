@@ -1,15 +1,33 @@
+
 # eSIS Partner API v1
 
-> _**NOTE**: This document is working version of the eSIS Partner API documentation. It will be changed, updated and improved in the coming days based on the more information, suggestions and limitations we gather from both our developers and our partners._
+> Sometimes referred as "ESIS Sync API"
 
-## Intro
+- [Documentation](README.md)
+  - [Intro](#intro)
+    - [Document conventions](#document-conventions)
+    - [Authentication](#authentication)
+    - [Request format](#request-format)
+    - [Response format](#response-format)
+  - [Products](#products)
+  - [Products API](#products-api)
+
+
+- [Examples - product json](example-product.md)
+
+- [Alt Prices](alt-prices.md)
+
+
+---
+
+## <a name="intro"></a> Intro
 
 The eSIS Partner API:
 - Is RESTful
-- Uses JWT for machine to machine authorization.
+- Uses JWT for machine to machine authentication.
 - Always returns responses in JSON.
 
-### Document conventions
+### <a name="document-conventions"></a> Document conventions
 
 Endpoints are described with an HTTP method and a path. Example:
 
@@ -22,7 +40,7 @@ Prepend your eSIS Partner URL to the path to get the full endpoint URL. In examp
 GET https://company.esis-platform.com/api/v1/products
 ```
 
-Curly braces, {}, in the path indicate a placeholder value that you must replace with your use case specific value. Example:
+Curly braces, `{}`, in the path indicate a placeholder value that you must replace with your use case specific value. Example:
 
 ```
 GET /api/v1/products/{external_id}
@@ -30,14 +48,9 @@ GET /api/v1/products/{external_id}
 
 The body of requests and responses for each resource is described in a JSON format table. Each table lists a resource's properties, their data types, whether or not they're required, and descriptions.
 
-### Authentication
+### <a name="authentication"></a> Authentication
 
 Client must be a verified partner to make API requests. Partner can authorize against the API using a JWT access token that is provided for partner’s use.
-
-> @TODO Document:
-- [x] How to authenticate requests
-- [x] Error messages related to invalid authentication
-- [ ] Sensitivity around authentication information
 
 To retrieve or store data with ESIS API partner’s app first need to authenticate with JWT bearer token. Each request must be authenticated. Clients can include JWT in HTTP header `Authorization: Bearer {token}`.
 
@@ -49,7 +62,7 @@ If a client fails to include a valid access token, it will receive a 401 respons
 }
 ```
 
-### Request format
+### <a name="request-format"></a> Request format
 
 The eSIS Partner API is a HTTP JSON API.
 - Clients must supply a `Content-Type: application/json` header in PUT and POST requests.
@@ -58,9 +71,9 @@ The eSIS Partner API is a HTTP JSON API.
 
 The documented JSON properties for this API are case sensitive.
 
-### Response format
+### <a name="response-format"></a> Response format
 
-The eSIS Partner API responds to successful requests with HTTP status codes in the 200 or 300 range. When you create or update a resource, the API renders the resulting JSON representation in the response body ~~and sets a Location header pointing to the resource~~.
+The eSIS Partner API responds to successful requests with HTTP status codes in the 200 or 300 range. When you create or update a resource, the API renders the resulting JSON representation in the response body.
 
 #### 200 range
 The request was successful. The status is:
@@ -71,34 +84,19 @@ The request was successful. The status is:
 The request was not successful. The content type of the response *may* be `text/plain` for API-level error messages, such as when trying to call the API without SSL. The content type is `application/json` for business-level error messages because the response includes a JSON object with information about the error.
 
 #### 500 range
-~~A 503 response with a Retry-After header indicates a database timeout or deadlock. You can retry your request after the number of seconds specified in the Retry-After header.~~
-
-~~If the 503 response doesn't have a Retry-After header, eSIS Partner API may be experiencing internal issues or undergoing scheduled maintenance. In such cases, check with support (support@esisapp.com) for any known issues.~~
 
 We recommend treating any 500 status codes as a warning or temporary state. However, if the status persists and we don't have a publicly announced maintenance or service disruption, contact us at support@esis-platform.com.
 
-#### Pagination
+---
 
-> _**NOTE:** Pagination is still in development._
+## <a name="products"></a> Products
 
-By default, list endpoints return a maximum of *500* records per page. You can change the number of records on a per-request basis by passing a limit parameter in the request URL parameters. Also, you can specify offset parameter for skipping any number of results. Example:
-
-```
-GET /api/v1/products?offset=150&limit=150
-```
-
-However, you can't exceed *500* records per page.
-
-## Products
-> @TODO DOCUMENT:
-- [ ] Product resource and it’s fields.
-
-Example product:
+**Basic** example of a product object (JSON):
 ```json
 {
   "external_id": "10001",
   "sku": "SM-A415FZBDEUF",
-  "ean": "8806090419157",
+  "ean": null,
   "mpn": null,
   "price": 36990.00,
   "special_price": null,
@@ -106,40 +104,95 @@ Example product:
   "special_to_date": null,
   "is_in_stock": true,
   "stock_qty": null,
+  "extra": {}
+}
+```
+
+**Full** example of a product object (JSON):
+```json
+{
+  "external_id": "10001",
+  "sku": "SM-F936BZABEUE",
+  "ean": "8806094504972",
+  "mpn": null,
+  "price": 13999.00,
+  "price_text": "Lowest price in previous 30 days",
+  "special_price": 12999.00,
+  "special_from_date": "2022-08-14T22:00:00.000Z",
+  "special_to_date": "2022-08-31T21:59:59.000Z",
+  "is_in_stock": true,
+  "stock_qty": 12,
+  "alt_prices": [
+    {
+      "price": 1857.99,
+      "special_price": 1725.26,
+      "currency": "EUR"
+    }
+  ],
+  "installments": [
+    {
+      "amount": 1083.25,
+      "period": 12
+    },
+    {
+      "amount": 541.625,
+      "period": 24
+    }
+  ],
   "extra": {
-    "loyalty_poitns": 34
+    "loyalty_points": 5
   }
 }
 ```
 
+### Product data fields
 
-Example product - installment payment:
-```json
-{
-  "external_id": "10001",
-  "sku": "SM-A415FZBDEUF",
-  "ean": "8806090419157",
-  "mpn": null,
-  "price": 36990.00,
-  "special_price": null,
-  "special_from_date": null,
-  "special_to_date": null,
-  "is_in_stock": true,
-  "stock_qty": null,
-  "installments": [
-    {
-      "amount": 3082.50,
-      "period": 12
-    },
-    {
-      "amount": 1541.25,
-      "period": 24
-    }
-  ],
-  "extra": null
-}
+| Field | Type |  |
+| --- | --- | --- |
+| `external_id` | String \| Number | Required |
+| `sku` | String | Required* |
+| `ean` | String \| Number | Required* |
+| `mpn` | String \| Number |  |
+| `price` | String | Required |
+| `price_text` | String |  |
+| `special_price` | Number |  |
+| `special_from_date` | String |  |
+| `special_to_date` | String |  |
+| `is_in_stock` | Boolean | Required |
+| `stock_qty` | Number |  |
+| `alt_prices` | Array |  |
+| `installments` | Array |  |
+| `extra` | Object |  |
+
+\* you MUST provide either `sku` or `ean`. if available, it is recommended to send both.
+
+##### SKU
+
+> **Note**
+> `sku` MUST be a Samsung's model code.
+
+Examples
+```
+SM-A415FZBDEUF
+QE75QN900BTXXH
+RB34A7B5E22/EZ
 ```
 
+##### Dates
+
+Example
+```
+2022-08-31T21:59:59.000Z
+```
+
+Syntax
+- Max 25 alphanumeric characters
+- ISO 8601  
+  - YYYY-MM-DDThh:mmZ
+
+---
+
+## <a name="products-api"></a> Products API
 
 ### List
 ```
@@ -159,15 +212,14 @@ List all products.
   - Optional
   - Default: 100
 
-##### Filters
-> @TODO Document available filters for the list endpoint.
 
 #### Example response
-```
-Status: 200 OK
 
+Status: 200 OK
+```json
 {
   "status": "success",
+  "message": "Request Successful",
   "data": [
     {
       "external_id": "10001",
@@ -180,13 +232,24 @@ Status: 200 OK
       "special_to_date": null,
       "is_in_stock": true,
       "stock_qty": 15,
+      "extra": {}
+    },
+    {
+      "external_id": "10002",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": null,
+      "price": 36990.00,
+      "special_price": 34990.00,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 7,
       "extra": {
         "loyalty_poitns": 34
       }
-    },
-    ...
-  ],
-  "message": "Request Successful"
+    }
+  ]
 }
 ```
 
@@ -203,9 +266,9 @@ Get a single product by `external_id`.
   - Required
 
 #### Example responses
-```
-Status: 200 OK
 
+Status: 200 OK
+```json
 {
     "status": "success",
     "data": {
@@ -227,13 +290,12 @@ Status: 200 OK
 }
 ```
 
-```
 Status: 404 Not Found
-
+```json
 {
     "status": "failed",
-    "data": {},
-    "message": "Product not found"
+    "message": "Product not found",
+    "data": {}
 }
 ```
 
@@ -245,11 +307,13 @@ POST /api/v1/products
 Create a new product.
 
 #### Example request
+Headers
 ```
 Authorization: Bearer {token}
 Content-Type: application/json
 Accept: application/json
 ```
+Body
 ```json
 {
   "external_id": "10001",
@@ -270,9 +334,8 @@ Accept: application/json
 
 #### Example responses
 
-```
 Status: 201 Created
-
+```json
 {
   "status": "success",
   "data": {
@@ -298,18 +361,18 @@ Status: 201 Created
 }
 ```
 
-```
 Status: 400 Bad Request
+```json
 
 {
     "status": "failed",
-    "data": {},
-    "message": "Invalid request"
+    "message": "Invalid request",
+    "data": {}
 }
 ```
-```
-Status: 422 Unprocessable Entity
 
+Status: 422 Unprocessable Entity
+```json
 {
   "status": "failed",
   "data": {
@@ -355,10 +418,8 @@ Creates new partner’s product if the product does not already exist, or update
 
 If the product was created:
 
-```
 Status: 201 Created
-Location: /api/v1/products/{new-product-sku}
-
+```json
 {
     "status": "success",
     "data": {
@@ -382,10 +443,8 @@ Location: /api/v1/products/{new-product-sku}
 
 If an existing product was updated:
 
-```
 Status: 200 OK
-Location: /api/v1/products/{existing-product-sku}
-
+```json
 {
     "status": "success",
     "data": {
@@ -436,12 +495,18 @@ Each individual product object can identify an existing product by ~~sku, ean or
       }
     },
     {
-      "external_id": "10001",
-      "sku": "SM-A415ZFBDEUF",
-      "ean": "8806090419158",
-      ...
+      "external_id": "10002",
+      "sku": "SM-A415FZBDEUF",
+      "ean": "8806090419157",
+      "mpn": null,
+      "price": 36990.00,
+      "special_price": 34990.00,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {}
     },
-    ...
   ]
 }
 ```
@@ -468,12 +533,6 @@ PATCH /api/v1/products/{external_id}
 
 The PATCH method is used for partial changes to existing products.
 
-> @TODO Document api endpoint
-- [x] Description
-- [x] Parameters
-- [ ] Request
-- [ ] Response
-
 #### Parameters
 
 - **external_id** - Partner’s product ID
@@ -486,11 +545,6 @@ DELETE /api/v1/products/{external_id}
 ```
 Delete an existing product by `external_id`.
 
-> @TODO Document api endpoint
-- [x] Description
-- [x] Parameters
-- [ ] Request
-- [ ] Response
 
 #### Parameters
 
@@ -498,9 +552,8 @@ Delete an existing product by `external_id`.
   - Required
 
 #### Example responses
-```
 Status: 200 OK
-
+```json
 {
     "status": "success",
     "data": {
@@ -547,10 +600,10 @@ Delete many products.
 ```json
 {
   "status": "success",
+  "message": "Request Successful",
   "data": {
     "deleted": 2
-  },
-  "message": "Request Successful"
+  }
 }
 ```
 
@@ -579,26 +632,33 @@ This endpoint is proposed for use cases where it’s easier for a partner to sen
       "special_from_date": null,
       "special_to_date": null,
       "is_in_stock": true,
-      "stock_qty": null,
+      "stock_qty": 5,
       "extra": null
     },
     {
       "external_id": "10002",
       "sku": "SM-A415FZBDEUF",
       "ean": "8806090419157",
-      ...
-    },
-    ...
+      "mpn": "",
+      "price": 36990.00,
+      "special_price": null,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 5,
+      "extra": null
+    }
   ]
 }
 ```
 
 #### Example response
-```
-Status: 200 OK
 
+Status: 200 OK
+```json
 {
   "status": "success",
+  "message": "Request Successful",
   "data": [
     {
       "_id": "5ec91a88ec3f2a53cf0a198d",
@@ -612,22 +672,28 @@ Status: 200 OK
       "special_to_date": null,
       "is_in_stock": true,
       "stock_qty": 15,
-      "extra": {
-        "loyalty_poitns": 34
-      },
+      "extra": {},
       "__v": 0,
       "createdAt": "2020-05-23T12:43:52.709Z",
       "updatedAt": "2020-05-23T12:43:52.709Z"
     },
     {
-      "_id": "5ec91a88ec3f2a53cf0a198e",
+      "_id": "3cf0a198d5ec91a88ec3f2a5",
       "external_id": "10002",
       "sku": "SM-A415FZBDEUF",
       "ean": "8806090419157",
-      ...
-    },
-    ...
-  ],
-  "message": "Request Successful"
+      "mpn": "",
+      "price": 36990,
+      "special_price": 34990,
+      "special_from_date": null,
+      "special_to_date": null,
+      "is_in_stock": true,
+      "stock_qty": 15,
+      "extra": {},
+      "__v": 0,
+      "createdAt": "2020-05-23T12:43:52.709Z",
+      "updatedAt": "2020-05-23T12:43:52.709Z"
+    }
+  ]
 }
 ```
