@@ -17,7 +17,6 @@
 
 - [Alt Prices](alt-prices.md)
 
-> __NOTE__ Read about
 
 ---
 
