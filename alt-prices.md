@@ -17,7 +17,7 @@
 
 ## Summary
 
-For product with price, special price, and price text as in table below
+For product with price, special price, and price text as in the table below
 
 |  | HRK | EUR | Note |
 | --- | --- | --- | --- |
@@ -160,31 +160,7 @@ Supports custom text related to the product price (`price` field).
 | `price_text` | String | optional | Optional text explaining price (`price` field), usually for products with `special_price`  |
 
 
-##### Example with field `price` and `alt_prices`
-
-```json
-{
-  "external_id": "10001",
-  "sku": "SM-F936BZABEUE",
-  "ean": "8806094504972",
-  "mpn": null,
-  "price": 13999.00,
-  "price_text": "Lowest price in the last 30 days",
-  "special_price": null,
-  "special_from_date": null,
-  "special_to_date": null,
-  "is_in_stock": true,
-  "stock_qty": 12,
-  "alt_prices": [
-    {
-      "price": 1857.99,
-      "currency": "EUR"
-    }
-  ]
-}
-```
-
-##### Example with field `special_price` and `alt_prices`
+##### Example product with special price and custom price text
 
 ```json
 {
